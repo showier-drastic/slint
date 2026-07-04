@@ -26,7 +26,7 @@ type FontScaleFactor = euclid::Scale<f32, FontUnit, PhysicalPx>;
 /// (instead of snapping the pen to a whole pixel) keeps inter-glyph spacing
 /// even. 4 bins (quarter-pixel) is enough to remove the visible unevenness at
 /// UI text sizes while keeping the glyph cache small.
-pub const SUBPIXEL_BIN_COUNT: i32 = 4;
+pub(crate) const SUBPIXEL_BIN_COUNT: i32 = 4;
 
 /// Cache key includes blob id, font index, pixel size, glyph id, a hash of normalized
 /// variation coordinates (so different variable font instances produce distinct cache
