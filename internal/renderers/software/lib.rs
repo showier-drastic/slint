@@ -3364,7 +3364,7 @@ impl<T: ProcessScene> sharedparley::GlyphRenderer for SceneBuilder<'_, T> {
 
             // Absolute, sub-pixel-accurate device position of the pen for this glyph.
             let abs_x = global_offset.x + positioned_glyph.x;
-            let abs_y = global_offset.y + positioned_glyph.y + y_offset.get() as f32;
+            let abs_y = global_offset.y + positioned_glyph.y + y_offset.get();
 
             // Quantize the horizontal position to SUBPIXEL_BINS positions per pixel.
             // The integer part is the blit origin; the fractional part is rendered
