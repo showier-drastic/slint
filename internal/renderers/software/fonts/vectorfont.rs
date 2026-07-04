@@ -31,7 +31,21 @@ pub(crate) const SUBPIXEL_BIN_COUNT: i32 = 4;
 /// Cache key includes blob id, font index, pixel size, glyph id, a hash of normalized
 /// variation coordinates (so different variable font instances produce distinct cache
 /// entries) and the horizontal sub-pixel bin.
-type GlyphCacheKey = (u64, u32, PhysicalLength, core::num::NonZeroU16, u64, u8);
+#[derive(Clone, Copy, PartialEq, Eq, Hash)]
+struct GlyphCacheKey {
+    /// Font blob id.
+    font_blob_id: u64,
+    /// Font index within the blob.
+    font_index: u32,
+    /// Rendered pixel size.
+    pixel_size: PhysicalLength,
+    /// Glyph id.
+    glyph_id: core::num::NonZeroU16,
+    /// Hash of the normalized variation coordinates.
+    coords_hash: u64,
+    /// Horizontal sub-pixel bin.
+    subpixel_bin: u8,
+}
 
 struct RenderableGlyphWeightScale;
 
@@ -167,14 +181,14 @@ impl VectorFont {
         GLYPH_CACHE.with(|cache| {
             let mut cache = cache.borrow_mut();
 
-            let cache_key = (
-                self.font_blob.id(),
-                self.font_index,
-                self.pixel_size,
+            let cache_key = GlyphCacheKey {
+                font_blob_id: self.font_blob.id(),
+                font_index: self.font_index,
+                pixel_size: self.pixel_size,
                 glyph_id,
-                self.coords_hash,
+                coords_hash: self.coords_hash,
                 subpixel_bin,
-            );
+            };
 
             if let Some(entry) = cache.get(&cache_key) {
                 return Some(entry.clone());
